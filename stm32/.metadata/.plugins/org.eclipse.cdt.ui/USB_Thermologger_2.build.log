@@ -1,0 +1,20 @@
+08:59:10 **** Incremental Build of configuration Debug for project USB_Thermologger_2 ****
+make -j32 all 
+arm-none-eabi-gcc "../USB_DEVICE/App/usbd_cdc_if.c" -mcpu=cortex-m0 -std=gnu11 -g3 -DSTM32F070xB -DUSE_HAL_DRIVER -DDEBUG -c -I../USB_DEVICE/Target -I../Drivers/STM32F0xx_HAL_Driver/Inc -I../Drivers/CMSIS/Include -I../Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../USB_DEVICE/App -I../Drivers/STM32F0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F0xx/Include -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -Os -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"USB_DEVICE/App/usbd_cdc_if.d" -MT"USB_DEVICE/App/usbd_cdc_if.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "USB_DEVICE/App/usbd_cdc_if.o"
+arm-none-eabi-gcc -o "USB_Thermologger_2.elf" @"objects.list"   -mcpu=cortex-m0 -T"/home/klingler/develop/usb_temperature/stm32/USB_Thermologger_2/STM32F070CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="USB_Thermologger_2.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: USB_Thermologger_2.elf
+ 
+arm-none-eabi-objdump -h -S  USB_Thermologger_2.elf  > "USB_Thermologger_2.list"
+arm-none-eabi-objcopy  -O binary  USB_Thermologger_2.elf  "USB_Thermologger_2.bin"
+arm-none-eabi-size   USB_Thermologger_2.elf 
+   text	   data	    bss	    dec	    hex	filename
+  41420	    861	   5776	  48057	   bbb9	USB_Thermologger_2.elf
+Finished building: default.size.stdout
+ 
+Finished building: USB_Thermologger_2.bin
+ 
+Finished building: USB_Thermologger_2.list
+ 
+
+08:59:10 Build Finished. 0 errors, 0 warnings. (took 368ms)
+

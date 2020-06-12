@@ -1,0 +1,7 @@
+main.c:222:6:SystemClock_Config	104	static
+main.c:520:8:MAX31855	24	static
+main.c:538:6:HAL_RTC_AlarmAEventCallback	0	static
+main.c:550:6:USB_BootloaderInit	24	static,ignoring_inline_asm
+main.c:568:6:USB_TriggerBootloader	0	static,ignoring_inline_asm
+main.c:84:5:main	240	static
+main.c:580:6:Error_Handler	0	static
