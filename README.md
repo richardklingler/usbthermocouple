@@ -92,7 +92,8 @@ This command might be changed or a new command might be possible to trigger meas
 
 #### Temperature offset
 
-This command is not implemented yet, but the design includes a EEPROM for storing offsets.
+This command is currently being worked on and so far the tests are good.
+The offset values are also stored in EEPROM.
 
     O1:-2.5<Return>
 
