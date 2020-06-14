@@ -92,7 +92,8 @@ This command might be changed or a new command might be possible to trigger meas
 
 #### Temperature offset
 
-This command is not implemented yet, but the design includes a EEPROM for storing offsets.
+This command is currently being worked on and so far the tests are good.
+The offset values are also stored in EEPROM.
 
     O1:-2.5<Return>
 
@@ -103,5 +104,13 @@ This command is not implemented yet, but the design includes a EEPROM for storin
 
 #### DFU Bootloader Mode
 
-The device can be set into DFU bootloader mode just by sending a predefined command. The code is tested that it successfully enters DFU mode when resetted by code, but the flashing of a new software hasn't been tested yet.
+The device can be set into DFU bootloader mode just by sending a predefined command. The code is tested that it successfully enters DFU mode when resetted by code, and the flashing of a new software has been tested.
+
+This puts the controller into DFU USB bootloader mode:
+
+    echo "X1704" > /dev/ttyACM1
+
+Afterwards a new firmware can be flashed with dfu-util:
+
+    dfu-util -a 0 -s 0x08000000:leave -D ./USB_Thermologger_2/Debug/USB_Thermologger_2.bin
 
