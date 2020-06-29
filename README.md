@@ -28,11 +28,10 @@ and therefore starts sending out the measured temperatures through its USB devic
 
 In STM32CubeIDE the USB CDC profile was chosen for its simplicity, which makes it possible to use any terminal program as the device registers to a PC host as a serial interface, for example /dev/ttyACM0 in case of Linux.
 
-### Fehler
+### Error
 
-Falls ein Thermofühlen aus gesteckt wird, ein Fehler vorhanden ist (Kurzschluss), wird
-der betreffende Kanal nicht mehr auf der Ausgabe erscheinen. Dies macht Sinn, wenn
-man nur einen Kanal betreiben will ohne dass falsche Zusatzwerte angezeigt werden.
+If a thermocouple error occurs in case of a short-cut or not being plugged in, the according channel doesn't output any values anymore.
+This makes sense when for example only one channel is used. Only when all channels show an error, the information is output via USB as well.
 
 ### USB Commands
 
