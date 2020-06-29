@@ -36,7 +36,7 @@ man nur einen Kanal betreiben will ohne dass falsche Zusatzwerte angezeigt werde
 
 ### USB Commands
 
-THe device not only sends the values out the USB interface, but also can receive simple commands like setting the clock and interval of measurements.
+The device not only sends the values out the USB interface but can also receive simple commands like setting the clock and interval of measurements.
 
 #### Setting the RTC time
 
@@ -104,7 +104,7 @@ The offset values are also stored in EEPROM.
 
 #### DFU Bootloader Mode
 
-The device can be set into DFU bootloader mode just by sending a predefined command. The code is tested that it successfully enters DFU mode when resetted by code, and the flashing of a new software has been tested.
+The device can be set into DFU bootloader mode just by sending a predefined command. The code is tested that it successfully enters DFU mode when the command is sent via USB.
 
 This puts the controller into DFU USB bootloader mode:
 
