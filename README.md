@@ -7,11 +7,11 @@
 This is my first ever published project on Github, so most probably not error free (o;
 
 It is a small 60mm x 80mm USB device which reads out temperatures from two K-type thermocouple sensors via a MAX31855 ADC.
-As the main controller a STM32F070CBT6 was chosen due to the simplicity in setting up the STM32CubeIDE and configure the device for USB device CDC mode.
+As the main controller a STM32F070CBT6 was chosen due to the simplicity in setting up the STM32CubeIDE and configure it for USB CDC mode.
 
 [**STM32CubeIDE!**](https://www.st.com/en/development-tools/stm32cubeide.html)
 
-For schmeatic and PCB design the great KiCAD software was used:
+For schematic and PCB design the great KiCAD software was used:
 
 [**KiCAD**](https://kicad-pcb.org/)
 
