@@ -150,4 +150,5 @@
   (lib (name dk_TVS-Mixed-Technology)(type Legacy)(uri /home/klingler/develop/kicad/digikey-kicad-library/digikey-symbols/dk_TVS-Mixed-Technology.lib)(options "")(descr ""))
   (lib (name dk_USB-DVI-HDMI-Connectors)(type Legacy)(uri /home/klingler/develop/kicad/digikey-kicad-library/digikey-symbols/dk_USB-DVI-HDMI-Connectors.lib)(options "")(descr ""))
   (lib (name thermologger)(type Legacy)(uri /home/klingler/develop/usb_temperature/kicad/usb_thermo_logger/thermologger.lib)(options "")(descr ""))
+  (lib (name usb_thermo_logger-rescue)(type Legacy)(uri ${KIPRJMOD}/usb_thermo_logger-rescue.lib)(options "")(descr ""))
 )

@@ -31,8 +31,17 @@ difference()
             translate([$w - $r, $r, 0]) cylinder($t, $r, $r);
         }
         // LED
-        translate([28.5, $ph + 2, -10]) cube([4, 4, 10], false);
-        translate([28.5 + 25, $ph + 2, -10]) cube([4, 4, 10], false);
+        hull()
+        {
+            translate([28, $ph, -5]) cube([5, 5, 5], false);
+            translate([28, $ph, -10]) cube([5, 2, 5], false);
+        }
+    }
+//    translate([28.5, $ph - 1, -8]) cube([4, 4, 10], false);
+    hull()
+    {
+        translate([28.5, $ph - 1, -5]) cube([4, 4, 5], false);
+        translate([28.5, $ph - 1, -9]) cube([4, 2, 5], false);
     }
     
     // Screw holes
@@ -44,7 +53,4 @@ difference()
     // Connector cutouts
     translate([10, $ph, -1]) cube([$cw, $ch, $t + 2], false);
     translate([35, $ph, -1]) cube([$cw, $ch, $t + 2], false);
-    
-    // LED cut 45°
-    translate([0, 13.5, -20]) rotate([45, 0, 0]) cube([$w, 10, 10], false);
 }

@@ -57,7 +57,7 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/21709J.pdf" H 3050 3900 50 
 	1    0    0    -1  
 $EndComp
 $Comp
-L Sensor_Temperature:MAX31855KASA U4
+L usb_thermo_logger-rescue:MAX31855KASA-Sensor_Temperature U4
 U 1 1 5EDDF2A0
 P 8450 1600
 F 0 "U4" H 9050 2200 50  0000 C CNN
@@ -68,7 +68,7 @@ F 3 "http://datasheets.maximintegrated.com/en/ds/MAX31855.pdf" H 8450 1600 50  0
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Sensor_Temperature:MAX31855KASA U3
+L usb_thermo_logger-rescue:MAX31855KASA-Sensor_Temperature U3
 U 1 1 5EDDF333
 P 8450 3100
 F 0 "U3" H 9000 3700 50  0000 C CNN
@@ -121,21 +121,21 @@ $EndComp
 $Comp
 L dk_Crystals:ECS-_327-12_5-34B-TR XTAL2
 U 1 1 5EDDFC9B
-P 3550 2800
-F 0 "XTAL2" H 2800 2850 50  0000 C CNN
-F 1 "ECS-_327-12_5-34B-TR" H 2750 2750 50  0000 C CNN
-F 2 "digikey-footprints:SMD-2_3.2x1.5mm" H 3750 3000 60  0001 L CNN
-F 3 "http://www.ecsxtal.com/store/pdf/ecx-31b.pdf" H 3750 3100 60  0001 L CNN
-F 4 "XC1617CT-ND" H 3750 3200 60  0001 L CNN "Digi-Key_PN"
-F 5 "ECS-.327-12.5-34B-TR" H 3750 3300 60  0001 L CNN "MPN"
-F 6 "Crystals, Oscillators, Resonators" H 3750 3400 60  0001 L CNN "Category"
-F 7 "Crystals" H 3750 3500 60  0001 L CNN "Family"
-F 8 "http://www.ecsxtal.com/store/pdf/ecx-31b.pdf" H 3750 3600 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/ecs-inc/ECS-.327-12.5-34B-TR/XC1617CT-ND/1693786" H 3750 3700 60  0001 L CNN "DK_Detail_Page"
-F 10 "CRYSTAL 32.7680KHZ 12.5PF SMD" H 3750 3800 60  0001 L CNN "Description"
-F 11 "ECS Inc." H 3750 3900 60  0001 L CNN "Manufacturer"
-F 12 "Active" H 3750 4000 60  0001 L CNN "Status"
-	1    3550 2800
+P 3550 2850
+F 0 "XTAL2" H 2800 2900 50  0000 C CNN
+F 1 "ECS-_327-12_5-34B-TR" H 2750 2800 50  0000 C CNN
+F 2 "digikey-footprints:SMD-2_3.2x1.5mm" H 3750 3050 60  0001 L CNN
+F 3 "http://www.ecsxtal.com/store/pdf/ecx-31b.pdf" H 3750 3150 60  0001 L CNN
+F 4 "XC1617CT-ND" H 3750 3250 60  0001 L CNN "Digi-Key_PN"
+F 5 "ECS-.327-12.5-34B-TR" H 3750 3350 60  0001 L CNN "MPN"
+F 6 "Crystals, Oscillators, Resonators" H 3750 3450 60  0001 L CNN "Category"
+F 7 "Crystals" H 3750 3550 60  0001 L CNN "Family"
+F 8 "http://www.ecsxtal.com/store/pdf/ecx-31b.pdf" H 3750 3650 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "/product-detail/en/ecs-inc/ECS-.327-12.5-34B-TR/XC1617CT-ND/1693786" H 3750 3750 60  0001 L CNN "DK_Detail_Page"
+F 10 "CRYSTAL 32.7680KHZ 12.5PF SMD" H 3750 3850 60  0001 L CNN "Description"
+F 11 "ECS Inc." H 3750 3950 60  0001 L CNN "Manufacturer"
+F 12 "Active" H 3750 4050 60  0001 L CNN "Status"
+	1    3550 2850
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -161,23 +161,23 @@ $EndComp
 $Comp
 L Device:C C2
 U 1 1 5EDE4656
-P 3300 3000
-F 0 "C2" H 3415 3046 50  0000 L CNN
-F 1 "4p7" H 3415 2955 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 2850 50  0001 C CNN
-F 3 "~" H 3300 3000 50  0001 C CNN
-	1    3300 3000
+P 3300 3050
+F 0 "C2" H 3415 3096 50  0000 L CNN
+F 1 "4p7" H 3415 3005 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 2900 50  0001 C CNN
+F 3 "~" H 3300 3050 50  0001 C CNN
+	1    3300 3050
 	1    0    0    -1  
 $EndComp
 $Comp
 L Device:C C4
 U 1 1 5EDE471E
-P 3800 3000
-F 0 "C4" H 3915 3046 50  0000 L CNN
-F 1 "4p7" H 3915 2955 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 3838 2850 50  0001 C CNN
-F 3 "~" H 3800 3000 50  0001 C CNN
-	1    3800 3000
+P 3800 3050
+F 0 "C4" H 3915 3096 50  0000 L CNN
+F 1 "4p7" H 3915 3005 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3838 2900 50  0001 C CNN
+F 3 "~" H 3800 3050 50  0001 C CNN
+	1    3800 3050
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -210,16 +210,13 @@ Connection ~ 3800 2400
 Wire Wire Line
 	3800 2400 3700 2400
 Wire Wire Line
-	4900 2800 3800 2800
+	3800 2850 3800 2900
 Wire Wire Line
-	3800 2800 3800 2850
-Connection ~ 3800 2800
+	3800 2850 3700 2850
 Wire Wire Line
-	3800 2800 3700 2800
+	3400 2850 3300 2850
 Wire Wire Line
-	3400 2800 3300 2800
-Wire Wire Line
-	3300 2800 3300 2850
+	3300 2850 3300 2900
 Wire Wire Line
 	3400 2400 3300 2400
 Wire Wire Line
@@ -234,14 +231,8 @@ Wire Wire Line
 	3800 2500 4900 2500
 Connection ~ 3300 2400
 Wire Wire Line
-	3300 2800 3300 2650
-Wire Wire Line
-	3300 2650 3800 2650
-Wire Wire Line
-	3800 2650 3800 2700
-Wire Wire Line
-	3800 2700 4900 2700
-Connection ~ 3300 2800
+	3300 2850 3300 2700
+Connection ~ 3300 2850
 $Comp
 L power:GNDD #PWR0101
 U 1 1 5EDE4F77
@@ -290,10 +281,6 @@ Wire Wire Line
 	3800 2050 3800 2000
 Wire Wire Line
 	3300 2050 3300 2000
-Wire Wire Line
-	3300 3200 3300 3150
-Wire Wire Line
-	3800 3200 3800 3150
 $Comp
 L power:GNDD #PWR0105
 U 1 1 5EDE834C
@@ -598,7 +585,7 @@ F 3 "http://www.st.com/internet/com/TECHNICAL_RESOURCES/TECHNICAL_LITERATURE/DAT
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Power_Protection:USBLC6-2SC6 U7
+L usb_thermo_logger-rescue:USBLC6-2SC6-Power_Protection U7
 U 1 1 5EE3ED3F
 P 8750 5400
 F 0 "U7" V 8300 4700 50  0000 L CNN
@@ -609,35 +596,13 @@ F 3 "http://www2.st.com/resource/en/datasheet/CD00050750.pdf" H 8950 5750 50  00
 	0    1    1    0   
 $EndComp
 Text Label 9850 5300 0    50   ~ 0
-DP
-Text Label 9850 5400 0    50   ~ 0
 DM
+Text Label 9850 5400 0    50   ~ 0
+DP
 Wire Wire Line
 	8850 4900 8850 4850
 Wire Wire Line
-	8850 4850 9550 4850
-Wire Wire Line
-	9550 4850 9550 5300
-Wire Wire Line
-	9550 5300 10000 5300
-Wire Wire Line
 	8850 5900 8850 5950
-Wire Wire Line
-	8850 5950 9550 5950
-Wire Wire Line
-	9550 5950 9550 5400
-Wire Wire Line
-	9550 5400 10000 5400
-Wire Wire Line
-	6200 4300 8650 4300
-Wire Wire Line
-	8650 4300 8650 4900
-Wire Wire Line
-	6200 4200 7950 4200
-Wire Wire Line
-	7950 4200 7950 5950
-Wire Wire Line
-	7950 5950 8650 5950
 Wire Wire Line
 	8650 5950 8650 5900
 $Comp
@@ -661,30 +626,6 @@ Wire Wire Line
 	9350 5200 9350 5400
 Wire Wire Line
 	9350 5400 9250 5400
-Text Label 9850 5500 0    50   ~ 0
-ID
-$Comp
-L Device:R R1
-U 1 1 5EE4D3EE
-P 9750 5850
-F 0 "R1" H 9800 5800 50  0000 L CNN
-F 1 "100k" H 9750 5700 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 9680 5850 50  0001 C CNN
-F 3 "~" H 9750 5850 50  0001 C CNN
-	1    9750 5850
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:GNDD #PWR0117
-U 1 1 5EE51837
-P 9750 6050
-F 0 "#PWR0117" H 9750 5800 50  0001 C CNN
-F 1 "GNDD" H 9754 5895 50  0000 C CNN
-F 2 "" H 9750 6050 50  0001 C CNN
-F 3 "" H 9750 6050 50  0001 C CNN
-	1    9750 6050
-	1    0    0    -1  
-$EndComp
 $Comp
 L power:GNDD #PWR0118
 U 1 1 5EE518B9
@@ -707,12 +648,6 @@ F 3 "" H 9950 6050 50  0001 C CNN
 	1    9950 6050
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9750 6050 9750 6000
-Wire Wire Line
-	9750 5700 9750 5500
-Wire Wire Line
-	9750 5500 10000 5500
 Wire Wire Line
 	10000 5600 9950 5600
 Wire Wire Line
@@ -754,7 +689,7 @@ Wire Wire Line
 	6750 5750 6750 5650
 Connection ~ 6750 5650
 Wire Wire Line
-	6750 5650 7100 5650
+	6750 5650 6900 5650
 $Comp
 L Device:C C11
 U 1 1 5EE61D67
@@ -819,7 +754,7 @@ $EndComp
 Wire Wire Line
 	5550 5550 5550 5650
 Wire Wire Line
-	6050 5650 5550 5650
+	6050 5650 5800 5650
 Connection ~ 5550 5650
 Wire Wire Line
 	5550 5650 5550 5800
@@ -1135,7 +1070,7 @@ Wire Wire Line
 Wire Wire Line
 	6650 1700 8050 1700
 Wire Wire Line
-	8050 3200 6200 3200
+	8050 3200 6950 3200
 Wire Wire Line
 	6200 3600 6750 3600
 Wire Wire Line
@@ -1578,7 +1513,7 @@ F 3 "~" H 1750 6300 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Wire Wire Line
-	3450 3800 4900 3800
+	3450 3800 4050 3800
 Wire Wire Line
 	1000 6300 1000 5400
 Connection ~ 1000 5400
@@ -1741,8 +1676,8 @@ $Comp
 L 74xx:74LS06 U5
 U 4 1 5EF67EF8
 P 2850 5400
-F 0 "U5" H 2850 5717 50  0000 C CNN
-F 1 "SN74LVC06ADR" H 2850 5626 50  0000 C CNN
+F 0 "U5" H 2800 5400 50  0000 C CNN
+F 1 "SN74LVC06ADR" H 3200 5300 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 5400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 2850 5400 50  0001 C CNN
 F 4 "296-14905-1-ND" H 2850 5400 50  0001 C CNN "Digikey"
@@ -1753,8 +1688,8 @@ $Comp
 L 74xx:74LS06 U5
 U 5 1 5EF67F92
 P 3350 5600
-F 0 "U5" H 3350 5917 50  0000 C CNN
-F 1 "SN74LVC06ADR" H 3350 5826 50  0000 C CNN
+F 0 "U5" H 3300 5600 50  0000 C CNN
+F 1 "SN74LVC06ADR" H 3650 5500 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3350 5600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 3350 5600 50  0001 C CNN
 F 4 "296-14905-1-ND" H 3350 5600 50  0001 C CNN "Digikey"
@@ -1765,7 +1700,7 @@ $Comp
 L 74xx:74LS06 U5
 U 2 1 5EF6802A
 P 2350 6100
-F 0 "U5" H 2350 6417 50  0000 C CNN
+F 0 "U5" H 2300 6100 50  0000 C CNN
 F 1 "SN74LVC06ADR" H 2350 6326 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2350 6100 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 2350 6100 50  0001 C CNN
@@ -1777,8 +1712,8 @@ $Comp
 L 74xx:74LS06 U5
 U 1 1 5EF680D4
 P 2850 6300
-F 0 "U5" H 2850 6617 50  0000 C CNN
-F 1 "SN74LVC06ADR" H 2850 6526 50  0000 C CNN
+F 0 "U5" H 2800 6300 50  0000 C CNN
+F 1 "SN74LVC06ADR" H 3150 6200 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 6300 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 2850 6300 50  0001 C CNN
 F 4 "296-14905-1-ND" H 2850 6300 50  0001 C CNN "Digikey"
@@ -1789,8 +1724,8 @@ $Comp
 L 74xx:74LS06 U5
 U 3 1 5EF6817C
 P 3350 6500
-F 0 "U5" H 3350 6817 50  0000 C CNN
-F 1 "SN74LVC06ADR" H 3350 6726 50  0000 C CNN
+F 0 "U5" H 3300 6500 50  0000 C CNN
+F 1 "SN74LVC06ADR" H 3650 6400 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3350 6500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 3350 6500 50  0001 C CNN
 F 4 "296-14905-1-ND" H 3350 6500 50  0001 C CNN "Digikey"
@@ -1813,7 +1748,7 @@ $Comp
 L 74xx:74LS06 U5
 U 6 1 5EF68E72
 P 2350 5200
-F 0 "U5" H 2350 5517 50  0000 C CNN
+F 0 "U5" H 2300 5200 50  0000 C CNN
 F 1 "SN74LVC06ADR" H 2350 5426 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2350 5200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS06" H 2350 5200 50  0001 C CNN
@@ -1838,4 +1773,219 @@ Wire Wire Line
 	6200 4000 6550 4000
 Wire Wire Line
 	6200 4100 6550 4100
+Wire Wire Line
+	8650 5950 7900 5950
+Wire Wire Line
+	7900 5950 7900 4200
+Wire Wire Line
+	7900 4200 6950 4200
+Wire Wire Line
+	6200 4300 7150 4300
+Wire Wire Line
+	8650 4300 8650 4900
+Wire Wire Line
+	8850 5950 9500 5950
+Wire Wire Line
+	9500 5950 9500 5300
+Wire Wire Line
+	9500 5300 10000 5300
+Wire Wire Line
+	10000 5400 9750 5400
+Wire Wire Line
+	9750 5400 9750 4850
+Wire Wire Line
+	9750 4850 8850 4850
+$Comp
+L Connector:TestPoint TP1
+U 1 1 5EF3CB17
+P 3800 4400
+F 0 "TP1" V 3900 4700 50  0000 C CNN
+F 1 "SCL" V 3800 4700 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 4000 4400 50  0001 C CNN
+F 3 "~" H 4000 4400 50  0001 C CNN
+	1    3800 4400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:TestPoint TP2
+U 1 1 5EF3CD4D
+P 3800 4600
+F 0 "TP2" V 3900 4900 50  0000 C CNN
+F 1 "SDA" V 3800 4900 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 4000 4600 50  0001 C CNN
+F 3 "~" H 4000 4600 50  0001 C CNN
+	1    3800 4600
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3800 4400 3950 4400
+Wire Wire Line
+	3950 4400 3950 3900
+Connection ~ 3950 3900
+Wire Wire Line
+	3800 4600 4050 4600
+Wire Wire Line
+	4050 4600 4050 3800
+Connection ~ 4050 3800
+Wire Wire Line
+	4050 3800 4900 3800
+$Comp
+L Connector:TestPoint TP6
+U 1 1 5EF59858
+P 6750 1300
+F 0 "TP6" H 6750 1800 50  0000 C CNN
+F 1 "SCK" V 6750 1550 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 6950 1300 50  0001 C CNN
+F 3 "~" H 6950 1300 50  0001 C CNN
+	1    6750 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP7
+U 1 1 5EF5A3D6
+P 6850 1300
+F 0 "TP7" H 6850 1700 50  0000 C CNN
+F 1 "MISO" V 6850 1550 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7050 1300 50  0001 C CNN
+F 3 "~" H 7050 1300 50  0001 C CNN
+	1    6850 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP5
+U 1 1 5EF5A464
+P 6650 1300
+F 0 "TP5" H 6650 1700 50  0000 C CNN
+F 1 "CS1" V 6650 1550 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 6850 1300 50  0001 C CNN
+F 3 "~" H 6850 1300 50  0001 C CNN
+	1    6650 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP9
+U 1 1 5EF5A62E
+P 6950 1300
+F 0 "TP9" H 6950 1800 50  0000 C CNN
+F 1 "CS2" V 6950 1550 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7150 1300 50  0001 C CNN
+F 3 "~" H 7150 1300 50  0001 C CNN
+	1    6950 1300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 1300 6650 1700
+Connection ~ 6650 1700
+Wire Wire Line
+	6750 1300 6750 1400
+Connection ~ 6750 1400
+Wire Wire Line
+	6850 1300 6850 1500
+Connection ~ 6850 1500
+Wire Wire Line
+	6950 1300 6950 3200
+Connection ~ 6950 3200
+Wire Wire Line
+	6950 3200 6200 3200
+$Comp
+L Connector:TestPoint TP10
+U 1 1 5EF9705F
+P 6950 4150
+F 0 "TP10" H 6950 4450 50  0000 C CNN
+F 1 "DM" H 6950 4350 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7150 4150 50  0001 C CNN
+F 3 "~" H 7150 4150 50  0001 C CNN
+	1    6950 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP11
+U 1 1 5EF9717F
+P 7150 4150
+F 0 "TP11" H 7150 4450 50  0000 C CNN
+F 1 "DP" H 7150 4350 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7350 4150 50  0001 C CNN
+F 3 "~" H 7350 4150 50  0001 C CNN
+	1    7150 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6950 4150 6950 4200
+Connection ~ 6950 4200
+Wire Wire Line
+	6950 4200 6200 4200
+Wire Wire Line
+	7150 4150 7150 4300
+Connection ~ 7150 4300
+Wire Wire Line
+	7150 4300 8650 4300
+$Comp
+L Connector:TestPoint TP8
+U 1 1 5EFB6122
+P 6900 5600
+F 0 "TP8" H 6900 5900 50  0000 C CNN
+F 1 "VIN" H 6900 5800 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7100 5600 50  0001 C CNN
+F 3 "~" H 7100 5600 50  0001 C CNN
+	1    6900 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:TestPoint TP3
+U 1 1 5EFB6214
+P 5800 5600
+F 0 "TP3" H 5800 5900 50  0000 C CNN
+F 1 "VCC" H 5800 5800 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 6000 5600 50  0001 C CNN
+F 3 "~" H 6000 5600 50  0001 C CNN
+	1    5800 5600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5800 5600 5800 5650
+Connection ~ 5800 5650
+Wire Wire Line
+	5800 5650 5550 5650
+Wire Wire Line
+	6900 5600 6900 5650
+Connection ~ 6900 5650
+Wire Wire Line
+	6900 5650 7100 5650
+$Comp
+L Connector:TestPoint TP4
+U 1 1 5EFD54DB
+P 6050 7100
+F 0 "TP4" H 6050 7400 50  0000 C CNN
+F 1 "GND" H 6050 7300 50  0000 C CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 6250 7100 50  0001 C CNN
+F 3 "~" H 6250 7100 50  0001 C CNN
+	1    6050 7100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GNDD #PWR0153
+U 1 1 5EFD55B3
+P 6050 7400
+F 0 "#PWR0153" H 6050 7150 50  0001 C CNN
+F 1 "GNDD" H 6054 7245 50  0000 C CNN
+F 2 "" H 6050 7400 50  0001 C CNN
+F 3 "" H 6050 7400 50  0001 C CNN
+	1    6050 7400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6050 7100 6050 7400
+Wire Wire Line
+	3800 2850 4250 2850
+Wire Wire Line
+	4250 2850 4250 2900
+Wire Wire Line
+	4250 2900 4900 2900
+Connection ~ 3800 2850
+Wire Wire Line
+	4350 2700 4350 2800
+Wire Wire Line
+	4350 2800 4900 2800
+Wire Wire Line
+	3300 2700 4350 2700
 $EndSCHEMATC
