@@ -113,3 +113,9 @@ Afterwards a new firmware can be flashed with dfu-util:
 
     dfu-util -a 0 -s 0x08000000:leave -D ./USB_Thermologger_2/Debug/USB_Thermologger_2.bin
 
+### Donations
+
+All my projects (currently not much but growing ;o) are self financed. If you like you can make a donation to my Paypal.me link:
+
+paypal.me/renderingfun
+[**paypal.me/renderingfun**](https://paypal.me/renderingfun)
