@@ -1,6 +1,6 @@
 ### Sample Python Qt5 USB Thermo logger application
 
-![PyQt5 USB logger](/images/usb_logger.png)
+![PyQt5 USB logger](images/usb_logger.png)
 
 This is a simple PyQt5 application for rendering the returned temperature data from my USB thermocouple converter.
 
