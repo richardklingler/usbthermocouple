@@ -69,8 +69,7 @@ static void MX_SPI1_Init(void);
 
 void USB_TriggerBootloader(void);
 void USB_BootloaderInit(void);
-double MAX31855(uint16_t PIN);
-/* USER CODE END PFP */
+static int MAX31855_Read(uint16_t pin, double *temp);/* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
@@ -113,14 +112,9 @@ int main(void)
   MX_SPI1_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  RTC_TimeTypeDef currTime = {0};
-  RTC_DateTypeDef currDate = {0};
 
   char buffer[40], usbrx[32];
-  uint8_t usbtx[32];
 
-  uint8_t counter = 0, i_temp0 = 0;
-  double t1, t2;
   uint32_t length = 0;
 
   HAL_GPIO_WritePin(GPIOA, MAX1_Pin, 1);
@@ -137,32 +131,17 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(send_usb)
 	  {
-		  t1 = MAX31855(MAX1_Pin);
-		  t2 = MAX31855(MAX2_Pin);
-/*
-		  HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-		  HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-*/
-		  if((t1 > 0.1) && (t2 > 0.1))
-			  sprintf(buffer,"%3.2f,%3.2f\n\r", t1, t2);
-		  if((t1 > 0.1) && (t2 < -0.1))
-			  sprintf(buffer,"%3.2f,-\n\r", t1);
-		  if((t1 < -0.1) && (t2 > 0.1))
-			  sprintf(buffer,"-,%3.2f\n\r", t2);
-		  if((t1 < -0.1) && (t2 < -0.1))
-			  sprintf(buffer,"-,-\n\r");
-		  CDC_Transmit_FS((uint8_t *)buffer, strlen(buffer));
+		  char a[12] = "-", b[12] = "-";
+		  double t;
+		  if (MAX31855_Read(MAX1_Pin, &t)) snprintf(a, sizeof a, "%.2f", t);
+		  if (MAX31855_Read(MAX2_Pin, &t)) snprintf(b, sizeof b, "%.2f", t);
+		  int n = snprintf(buffer, sizeof buffer, "%s,%s\r\n", a, b);
+		  CDC_Transmit_FS((uint8_t *)buffer, n);
 		  send_usb = 0;
-		  counter++;
 
-//	  	  if(counter > 10)
-//	  		USB_TriggerBootloader();
 	  }
 	  if (VCP_retrieveInputData(usbrx,&length)!=0)
   	  {
-  		  // you could do data processing here.
-  		  //by demo, i just send it back to PC
-//		  sprintf((char *)usbtx, "%04X: %02X,%02X,%02X,%02X,%02X,%02X,%02X,%02X\n\r", (int)length, usbrx[0], usbrx[1], usbrx[2], usbrx[3], usbrx[4], usbrx[5], usbrx[6], usbrx[7]);
 		  if((length >= 1) && (usbrx[0] != 0))
 		  {
 			  RTC_TimeTypeDef sTime = {0};
@@ -170,38 +149,6 @@ int main(void)
 
 			  switch(usbrx[0])
 			  {
-/*
-			  	  case 'T':
-					  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
-
-					  sTime.Hours = (usbrx[1] - '0') << 4 | (usbrx[2] - '0');
-					  sTime.Minutes = (usbrx[3] - '0') << 4 | (usbrx[4] - '0');
-					  sTime.Seconds = (usbrx[5] - '0') << 4 | (usbrx[6] - '0');
-					  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
-					  {
-					    Error_Handler();
-					  }
-					  break;
-
-			  	  case 'D':
-			  		  HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BCD);
-
-			  		  sDate.Year = (usbrx[1] - '0') << 4 | (usbrx[2] - '0');
-			  		  sDate.Month = (usbrx[3] - '0') << 4 | (usbrx[4] - '0');
-			  		  sDate.Date = (usbrx[5] - '0') << 4 | (usbrx[6] - '0');
-					  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
-					  {
-					    Error_Handler();
-					  }
-					  break;
-
-			  	  case 'I':
-			  		  usbrx[length - 1] = 0;
-			  		  int_reload = strtol(&usbrx[1], NULL, 10);
-			  		  if(int_reload == 0)
-			  			  int_reload = 1;
-			  		  break;
-*/
 			  	  case 'X':
 			  		  if((usbrx[1] == '1') && (usbrx[2] == '7') && (usbrx[3] == '0') && (usbrx[4] == '4'))
 			  			  USB_TriggerBootloader();
@@ -213,9 +160,6 @@ int main(void)
 			  }
 
 		  }
-		  CDC_Transmit_FS(usbtx, strlen(usbtx));
-  		  usbtx[0]= '\0';
-  		  i_temp0++;
   	  }
   }
   /* USER CODE END 3 */
@@ -523,22 +467,19 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-double MAX31855(uint16_t PIN)
+static int MAX31855_Read(uint16_t pin, double *temp)
 {
-	uint8_t data[4];
-	uint16_t temp;
+	uint8_t d[4];
+	HAL_GPIO_WritePin(GPIOA, pin, GPIO_PIN_RESET);
+	HAL_StatusTypeDef st = HAL_SPI_Receive(&hspi1, d, 4, 100);
+	HAL_GPIO_WritePin(GPIOA, pin, GPIO_PIN_SET);
 
-	HAL_GPIO_WritePin(GPIOA, PIN, GPIO_PIN_RESET);
-	HAL_SPI_Receive(&hspi1, data, 4, 1000);
-	HAL_GPIO_WritePin(GPIOA, PIN, GPIO_PIN_SET);
+	if (st != HAL_OK || (d[1] & 0x01))	/* bit 16: fault (open, short GND/VCC) */
+		return 0;
 
-	if(data[3] & 0x07)
-		return(- (data[3] & 0x07));
-	else
-	{
-		temp = (data[0] << 6) | (data[1] >> 2);
-		return((double)temp / 4);
-	}
+	int16_t raw = (int16_t)((d[0] << 8) | d[1]) >> 2;	/* 14-bit signed, 0.25 °C/LSB */
+	*temp = raw * 0.25;
+	return 1;
 }
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
