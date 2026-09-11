@@ -139,17 +139,18 @@ int main(void)
 	  {
 		  t1 = MAX31855(MAX1_Pin);
 		  t2 = MAX31855(MAX2_Pin);
+/*
 		  HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
 		  HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-
+*/
 		  if((t1 > 0.1) && (t2 > 0.1))
-			  sprintf(buffer,"%02d.%02d.20%02d %02d:%02d:%02d,%3.2f,%3.2f\n\r", currDate.Date, currDate.Month, currDate.Year, currTime.Hours, currTime.Minutes, currTime.Seconds, t1, t2);
+			  sprintf(buffer,"%3.2f,%3.2f\n\r", t1, t2);
 		  if((t1 > 0.1) && (t2 < -0.1))
-			  sprintf(buffer,"%02d.%02d.20%02d %02d:%02d:%02d,%3.2f\n\r", currDate.Date, currDate.Month, currDate.Year, currTime.Hours, currTime.Minutes, currTime.Seconds, t1);
+			  sprintf(buffer,"%3.2f,-\n\r", t1);
 		  if((t1 < -0.1) && (t2 > 0.1))
-			  sprintf(buffer,"%02d.%02d.20%02d %02d:%02d:%02d,%3.2f\n\r", currDate.Date, currDate.Month, currDate.Year, currTime.Hours, currTime.Minutes, currTime.Seconds, t2);
+			  sprintf(buffer,"-,%3.2f\n\r", t2);
 		  if((t1 < -0.1) && (t2 < -0.1))
-			  sprintf(buffer,"%02d.%02d.20%02d %02d:%02d:%02d,No Sensors\n\r", currDate.Date, currDate.Month, currDate.Year, currTime.Hours, currTime.Minutes, currTime.Seconds);
+			  sprintf(buffer,"-,-\n\r");
 		  CDC_Transmit_FS((uint8_t *)buffer, strlen(buffer));
 		  send_usb = 0;
 		  counter++;
@@ -161,14 +162,15 @@ int main(void)
   	  {
   		  // you could do data processing here.
   		  //by demo, i just send it back to PC
-		  sprintf((char *)usbtx, "%04X: %02X,%02X,%02X,%02X,%02X,%02X,%02X,%02X\n\r", (int)length, usbrx[0], usbrx[1], usbrx[2], usbrx[3], usbrx[4], usbrx[5], usbrx[6], usbrx[7]);
-		  if((length >= 5) && (usbrx[0] != 0))
+//		  sprintf((char *)usbtx, "%04X: %02X,%02X,%02X,%02X,%02X,%02X,%02X,%02X\n\r", (int)length, usbrx[0], usbrx[1], usbrx[2], usbrx[3], usbrx[4], usbrx[5], usbrx[6], usbrx[7]);
+		  if((length >= 1) && (usbrx[0] != 0))
 		  {
 			  RTC_TimeTypeDef sTime = {0};
 	  		  RTC_DateTypeDef sDate = {0};
 
 			  switch(usbrx[0])
 			  {
+/*
 			  	  case 'T':
 					  HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
 
@@ -199,10 +201,14 @@ int main(void)
 			  		  if(int_reload == 0)
 			  			  int_reload = 1;
 			  		  break;
-
+*/
 			  	  case 'X':
 			  		  if((usbrx[1] == '1') && (usbrx[2] == '7') && (usbrx[3] == '0') && (usbrx[4] == '4'))
 			  			  USB_TriggerBootloader();
+			  		  break;
+
+			  	  case '?':
+			  		  send_usb = 1;
 			  		  break;
 			  }
 
@@ -537,12 +543,14 @@ double MAX31855(uint16_t PIN)
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
+/*
 	interval--;
 	if(interval == 0)
 	{
 		interval = int_reload;
 		send_usb = 1;
 	}
+*/
 }
 
 void (*SysMemBootJump) (void);

@@ -1,0 +1,7 @@
+.DS_Store
+stm32/USB_Thermologger_2/Release/
+stm32/USB_Thermologger_2/Debug/
+*.prefs
+stm32/USB_Thermologger_2/.cproject
+stm32/USB_Thermologger_2/.settings/language.settings.xml
+stm32/USB_Thermologger_2/*.launch
