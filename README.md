@@ -6,112 +6,174 @@
 
 This is my first ever published project on Github, so most probably not error free (o;
 
-It is a small 60mm x 80mm USB device which reads out temperatures from two K-type thermocouple sensors via a MAX31855 ADC.
+It is a small 60mm x 80mm USB device which reads out temperatures from two K-type thermocouple sensors via MAX31855 converters.
 As the main controller a STM32F070CBT6 was chosen due to the simplicity in setting up the STM32CubeIDE and configure it for USB CDC mode.
 
-[**STM32CubeIDE!**](https://www.st.com/en/development-tools/stm32cubeide.html)
+[**STM32CubeIDE**](https://www.st.com/en/development-tools/stm32cubeide.html)
 
 For schematic and PCB design the great KiCAD software was used:
 
-[**KiCAD**](https://kicad-pcb.org/)
+[**KiCAD**](https://www.kicad.org/)
 
-### Functions
+### Repository layout
 
-After powering up (the device gets its power from the USB port) the internal RTC is not set (no battery backup)
-and therefore starts sending out the measured temperatures through its USB device port as comma separated values:
+| Folder | Content |
+|---|---|
+| `kicad/usb_thermo_logger` | Schematic, PCB layout, 3D preview, datasheets |
+| `openscad` | Front and back panels for the enclosure (`.scad` and `.stl`) |
+| `stm32/USB_Thermologger_2` | Firmware, STM32CubeIDE project |
+| `python` | PyQt5 logger application for the **previous** firmware (see below) |
 
-    24.50,24.50
-    24.50,24.75
-    25.00,24.50
+### How it works
 
-### USB Interface
+The device is powered from the USB port and registers as a USB CDC serial interface, so no driver is needed:
 
-In STM32CubeIDE the USB CDC profile was chosen for its simplicity, which makes it possible to use any terminal program as the device registers to a PC host as a serial interface, for example /dev/ttyACM0 in case of Linux.
+| OS | Device |
+|---|---|
+| Linux | `/dev/ttyACM0` |
+| macOS | `/dev/cu.usbmodem…` |
+| Windows | `COMx` |
 
-### Error
+The baud rate setting doesn't matter.
 
-If a thermocouple error occurs in case of a short-cut or not being plugged in, the according channel doesn't output any values anymore.
-This makes sense when for example only one channel is used. Only when all channels show an error, the information is output via USB as well.
+| USB descriptor | Value |
+|---|---|
+| Vendor ID / Product ID | `0x1209` / `0x5304` ([pid.codes](https://pid.codes/1209/5304/)) |
+| Manufacturer | Klingler Engineering |
+| Product | USB Thermocouple Logger |
+| Serial number | Unique per device, derived from the STM32 chip ID |
 
-### USB Commands
+The device doesn't send anything on its own. The host software asks for a measurement whenever it wants one, and adds its own timestamps.
+This keeps the firmware simple: no clock to set, no drift, and the polling interval is completely up to the host.
 
-The device not only sends the values out the USB interface but can also receive simple commands like setting the clock and interval of measurements.
+The MAX31855 converts about 10 times per second, so polling faster than every 100 ms just returns the same value again.
 
-#### Setting the RTC time
+### USB commands
 
-The internal RTC clocks time can be set with following string sent to the USB port:
+| Command | Reply | Function |
+|---|---|---|
+| `?` | `24.50,23.75` | Read all channels |
+| `*IDN?` | `Klingler Engineering,TC2,208438763130,1.0.0` | Identify the device |
+| `C?` | `2` | Number of channels |
+| `X1704` | none | Enter the DFU bootloader (see [Firmware update](#firmware-update)) |
 
-    T103055<Return>
-    
-    T:        Determines the command type -> Set time
-    10:       The first two digits are the hour in 24h format including leading zero
-    30:       followed by two digits minutes with leading zero
-    55:       and finally two digits seconds, again with leading zeroes
-    <Return>: End of command is determined by a return, or 0x0A in Hex
+Every reply is one line terminated by CR LF (`\r\n`).
 
-Under Linux it is pretty easy to set the time in a terminal window like:
+Commands don't need a line ending, but **each command has to arrive in one piece**. The firmware looks at every USB packet on its own, so send the whole command with a single write.
+A terminal program like `screen` sends every keystroke separately, which only works for the single-character `?`.
 
-    echo "T095011" > /dev/ttyACM0
+Send one command and wait for its reply before sending the next one.
 
-As soon a valid RTC time is set, the CSV output contains the time in the first column:
+### Identification
 
-    09:36:21,24.50,24.75
-    09:36:22,24.25,24.75
-    09:36:23,24.50,24.75
+`*IDN?` follows the usual convention of measurement instruments and returns four comma-separated fields:
 
-#### Set date
+| Field | Example | Meaning |
+|---|---|---|
+| 1 | `Klingler Engineering` | Manufacturer |
+| 2 | `TC2` | Model |
+| 3 | `208438763130` | Serial number, identical to the USB serial number |
+| 4 | `1.0.0` | Firmware version |
 
-When logging temperatures for a longer time it makes sense to include the date as well. The date can be set similar to the time command:
+`C?` returns the number of thermocouple channels. Host software should use it instead of assuming a fixed number, so it also works with devices that have more channels.
 
-    D200611<Return>
+### Reply format
 
-    D:        Command type, D = set date
-    20:       Year in two digits format
-    06:       Month with two digits and leading zero
-    11:       Day in two digits, again with leading zeroes
-    <Return>: End of command (Hex 0x0A)
+After a `?`, the device replies with one line containing one value per channel, separated by commas. On the 2-channel device:
 
-As soon as a date is set, the date is prepended to the CSV output, but is not separated:
+| Reply | Meaning |
+|---|---|
+| `24.50,23.75` | Both channels have a thermocouple |
+| `24.50,-` | Only channel 1 has a valid reading |
+| `-,23.75` | Only channel 2 has a valid reading |
+| `-,-` | No valid reading on either channel |
 
-    11.06.2020 09:49:29,24.50,24.75
-    11.06.2020 09:49:30,24.50,24.75
-    11.06.2020 09:49:31,24.50,24.75
+Values are in degrees Celsius with a resolution of 0.25 °C. Negative temperatures are reported as negative values, e.g. `-12.25`.
+The MAX31855 reports -270 °C to +1800 °C; the usable range of a K-type thermocouple itself is roughly -200 °C to +1350 °C.
 
-#### Change measurement interval
+### Errors
 
-The measurement interval is set to 1 second by default, but for longer measurement periods and to keep the data small, an interval can be set for example to measure every 5 minutes:
+A `-` is sent for a channel when the MAX31855 reports a fault:
 
-    I300<Return>
+- thermocouple not connected (open circuit)
+- thermocouple shorted to GND
+- thermocouple shorted to VCC
 
-    I:        Command type, I = set interval
-    300:      Time in seconds
-    <Return>: End of command (Hex 0x0A)
+### Quick test
 
-This command might be changed or a new command might be possible to trigger measurements not by interval but by RTC time, for example when someone wants to measure it every hour it makes sense that the measurement is done when the time is exactly 12:00. With the interval setting the measurement cycle starts as soon the command is recognized, regardless of the current time.
+With `screen` on Linux or macOS, type `?` and the reply appears (exit with Ctrl-A, then K):
 
-#### Temperature offset
+```
+screen /dev/ttyACM0 115200
+```
 
-This command is currently being worked on and so far the tests are good.
-The offset values are also stored in EEPROM.
+For the other commands, use Python and [pyserial](https://pypi.org/project/pyserial/), which sends each command in one write:
 
-    O1:-2.5<Return>
+```python
+import serial
 
-    O:        O = Offset command
-    1:        Channel number, starting with 1 followed by :
-    -2.5:     Offset value in degrees Celsius
-    <Return>: End of command (Hex 0x0A)
+with serial.Serial('/dev/ttyACM0', timeout=1) as port:   # macOS: /dev/cu.usbmodem..., Windows: COM3
+    for command in (b'*IDN?', b'C?', b'?'):
+        port.write(command)
+        print(command.decode(), '->', port.readline().decode().strip())
+```
 
-#### DFU Bootloader Mode
+A simple logger that polls once per second and adds host timestamps:
 
-The device can be set into DFU bootloader mode just by sending a predefined command. The code is tested that it successfully enters DFU mode when the command is sent via USB.
+```python
+import serial, time
+from datetime import datetime
 
-This puts the controller into DFU USB bootloader mode:
+with serial.Serial('/dev/ttyACM0', timeout=1) as port:
+    while True:
+        port.reset_input_buffer()
+        port.write(b'?')
+        reply = port.readline().decode(errors='replace').strip()
+        print(f"{datetime.now().isoformat(timespec='milliseconds')},{reply}")
+        time.sleep(1)
+```
 
-    echo "X1704" > /dev/ttyACM1
+### Building the firmware
 
-Afterwards a new firmware can be flashed with dfu-util:
+1. In STM32CubeIDE, use *File → Import → Existing Projects into Workspace* and select `stm32/USB_Thermologger_2`.
+2. Build the *Release* configuration.
+3. To get a `.bin` file for DFU flashing, enable *Project → Properties → C/C++ Build → Settings → MCU Post build outputs → Convert to binary file*.
 
-    dfu-util -a 0 -s 0x08000000:leave -D ./USB_Thermologger_2/Debug/USB_Thermologger_2.bin
+### Firmware update
+
+The device can be put into the STM32 DFU bootloader by sending a command, so no BOOT0 jumper or programmer is needed:
+
+```
+printf 'X1704' > /dev/ttyACM0
+```
+
+The device then re-enumerates as *STM32 BOOTLOADER* (`0483:df11`). Flash the new firmware with [dfu-util](https://dfu-util.sourceforge.net/), which is also available via Homebrew on macOS:
+
+```
+dfu-util -a 0 -s 0x08000000:leave -D stm32/USB_Thermologger_2/Release/USB_Thermologger_2.bin
+```
+
+Alternatively the firmware can be flashed directly from STM32CubeIDE with an ST-LINK via SWD.
+
+### Changes
+
+**September 2026**
+
+- Project updated for current STM32CubeIDE versions and toolchains.
+- The device no longer sends measurements continuously. It only replies to `?`.
+- Removed the RTC time (`T`), date (`D`) and interval (`I`) commands, and the planned offset command (`O`). Timestamps, interval and calibration offsets are now the job of the host software.
+- New commands `*IDN?` (identification) and `C?` (channel count).
+- The device now uses its own USB ID `1209:5304` and reports as *USB Thermocouple Logger* by *Klingler Engineering*, instead of ST's generic `0483:5740`.
+- Sensor faults are detected via the MAX31855 fault bit.
+- Fixed negative temperatures, which were previously reported as values above 2000 °C.
+- Reply lines now end with `\r\n` instead of `\n\r`.
+
+The PyQt5 application in `python/` was written for the previous firmware (continuous output, RTC commands) and doesn't work with the current firmware.
+
+### License
+
+Firmware and software: GPL-3.0, see [LICENSE](LICENSE).
+Hardware: CERN Open Hardware Licence v1.2, see [OSH_License.txt](OSH_License.txt).
 
 ### Donations
 

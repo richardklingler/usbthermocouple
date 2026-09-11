@@ -35,6 +35,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FW_MANUFACTURER  "Klingler Engineering"
+#define FW_MODEL         "TC2"
+#define FW_VERSION       "1.0.0"
+#define NUM_CHANNELS     2
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -55,7 +59,11 @@ SPI_HandleTypeDef hspi1;
 uint8_t switchToBootloader __attribute__ ((section (".noinit")));
 volatile uint8_t send_usb = 0;
 volatile uint32_t interval = 1, int_reload = 1;
-
+uint8_t send_idn = 0;
+uint8_t send_channels = 0;
+char serial_number[13];
+extern USBD_HandleTypeDef hUsbDeviceFS;
+static const uint16_t tc_cs_pins[NUM_CHANNELS] = { MAX1_Pin, MAX2_Pin };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,7 +74,7 @@ static void MX_I2C1_Init(void);
 static void MX_RTC_Init(void);
 static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
-
+static int USB_TxIdle(void);
 void USB_TriggerBootloader(void);
 void USB_BootloaderInit(void);
 static int MAX31855_Read(uint16_t pin, double *temp);/* USER CODE END PFP */
@@ -114,12 +122,18 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
-  char buffer[40], usbrx[32];
-
   uint32_t length = 0;
 
   HAL_GPIO_WritePin(GPIOA, MAX1_Pin, 1);
   HAL_GPIO_WritePin(GPIOA, MAX2_Pin, 1);
+
+  char buffer[96];
+  uint8_t usbrx[64];
+
+  uint32_t id1 = *(uint32_t *)UID_BASE;
+  uint32_t id2 = *(uint32_t *)(UID_BASE + 4);
+  uint32_t id3 = *(uint32_t *)(UID_BASE + 8);
+  snprintf(serial_number, sizeof serial_number, "%08lX%04lX", id1 + id3, id2 >> 16);
 
   /* USER CODE END 2 */
 
@@ -130,36 +144,66 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(send_usb)
-	  {
-		  char a[12] = "-", b[12] = "-";
-		  double t;
-		  if (MAX31855_Read(MAX1_Pin, &t)) snprintf(a, sizeof a, "%.2f", t);
-		  if (MAX31855_Read(MAX2_Pin, &t)) snprintf(b, sizeof b, "%.2f", t);
-		  int n = snprintf(buffer, sizeof buffer, "%s,%s\r\n", a, b);
-		  CDC_Transmit_FS((uint8_t *)buffer, n);
-		  send_usb = 0;
 
+	  if (USB_TxIdle())
+	  {
+	  	if (send_idn)
+	  	{
+	  		int n = snprintf(buffer, sizeof buffer, "%s,%s,%s,%s\r\n",
+	  		                 FW_MANUFACTURER, FW_MODEL, serial_number, FW_VERSION);
+	  		CDC_Transmit_FS((uint8_t *)buffer, n);
+	  		send_idn = 0;
+	  	}
+	  	else if (send_channels)
+	  	{
+	  		int n = snprintf(buffer, sizeof buffer, "%d\r\n", NUM_CHANNELS);
+	  		CDC_Transmit_FS((uint8_t *)buffer, n);
+	  		send_channels = 0;
+	  	}
+	  	else if (send_usb)
+	  	{
+	  		int n = 0;
+	  		for (int ch = 0; ch < NUM_CHANNELS; ch++)
+	  		{
+	  			double t;
+	  			if (ch > 0)
+	  				n += snprintf(buffer + n, sizeof buffer - n, ",");
+	  			if (MAX31855_Read(tc_cs_pins[ch], &t))
+	  				n += snprintf(buffer + n, sizeof buffer - n, "%.2f", t);
+	  			else
+	  				n += snprintf(buffer + n, sizeof buffer - n, "-");
+	  		}
+	  		n += snprintf(buffer + n, sizeof buffer - n, "\r\n");
+	  		CDC_Transmit_FS((uint8_t *)buffer, n);
+	  		send_usb = 0;
+	  	}
 	  }
+
 	  if (VCP_retrieveInputData(usbrx,&length)!=0)
   	  {
 		  if((length >= 1) && (usbrx[0] != 0))
 		  {
-			  RTC_TimeTypeDef sTime = {0};
-	  		  RTC_DateTypeDef sDate = {0};
-
-			  switch(usbrx[0])
+			  switch (usbrx[0])
 			  {
-			  	  case 'X':
-			  		  if((usbrx[1] == '1') && (usbrx[2] == '7') && (usbrx[3] == '0') && (usbrx[4] == '4'))
-			  			  USB_TriggerBootloader();
-			  		  break;
+			  	case 'X':
+			  		if ((usbrx[1] == '1') && (usbrx[2] == '7') && (usbrx[3] == '0') && (usbrx[4] == '4'))
+			  			USB_TriggerBootloader();
+			  		break;
 
-			  	  case '?':
-			  		  send_usb = 1;
-			  		  break;
+			  	case '?':
+			  		send_usb = 1;
+			  		break;
+
+			  	case '*':
+			  		if ((length >= 5) && (strncmp(usbrx, "*IDN?", 5) == 0))
+			  			send_idn = 1;
+			  		break;
+
+			  	case 'C':
+			  		if ((length >= 2) && (usbrx[1] == '?'))
+			  			send_channels = 1;
+			  		break;
 			  }
-
 		  }
   	  }
   }
@@ -468,6 +512,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+static int USB_TxIdle(void)
+{
+	USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)hUsbDeviceFS.pClassData;
+	return (hcdc != NULL) && (hcdc->TxState == 0);
+}
+
 static int MAX31855_Read(uint16_t pin, double *temp)
 {
 	uint8_t d[4];
