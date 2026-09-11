@@ -70,6 +70,7 @@ static void MX_SPI1_Init(void);
 void USB_TriggerBootloader(void);
 void USB_BootloaderInit(void);
 static int MAX31855_Read(uint16_t pin, double *temp);/* USER CODE END PFP */
+/* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
